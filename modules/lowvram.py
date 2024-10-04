@@ -56,8 +56,6 @@ def setup_for_low_vram(sd_model, use_medvram):
 
     parents = {}
 
-    non_blocking = devices.supports_non_blocking()
-
     def send_me_to_gpu(module, _):
         """send this module to GPU; send whatever tracked module was previous in GPU to CPU;
         we add this as forward_pre_hook to a lot of modules and this way all but one of them will
@@ -71,7 +69,7 @@ def setup_for_low_vram(sd_model, use_medvram):
             return
 
         if module_in_gpu is not None:
-            module_in_gpu.to(cpu, non_blocking=non_blocking)
+            module_in_gpu.to(cpu)
             devices.torch_gc()
 
         module.to(devices.device)
